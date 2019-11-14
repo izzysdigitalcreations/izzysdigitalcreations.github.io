@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<title>sun sky 07</title>
+<style>
+html,body{height: 100%; margin: 0; padding: 0; border: 0; position:
+relative;overflow:hidden;overflow:clip;}
+</style>
+<div id="sun" style="width: 7vw; height: 7vw; border-radius: 7vw;
+background-color: #ff9; position: absolute; top: -3.5vw; left:
+-3.5vw;"></div>
+<div id="sky" style="height: 50vh;"></div>
+<div id="ground" style="height: 50vh; background: linear-gradient(to top,
+#632, #987); position: relative;"></div>
+<script>
+// for values mod 1
+function scale(start, fullstart, fullend, end, value) {
+  let mvalue = (value - start + 1) % 1;
+  let mfullstart = (fullstart - start + 1) % 1;
+  let mfullend = (fullend - start + 1) % 1;
+  let mend = (end - start + 1) % 1;
+  if(mvalue > mend) { return 0; }
+  else if(mvalue < mfullstart) { return mvalue / mfullstart; }
+  else if(mvalue > mfullend) { return 1 - (mvalue - mfullend) / (mend -
+mfullend); }
+  else { return 1; }
+}
+function a() {
+  let period = 30000;
+  let t = (Date.now() % period) / period;
+  let sun = document.getElementById("sun");
+  let sunh = 80 - 75*Math.sin(t*2*Math.PI);
+  let sunhp = Math.round(100 * (50 - sunh) / 50);
+  //sun.style.transform =
+//`translate(${Math.round(Math.cos(t*2*Math.PI))}vw, ${}px)`;
+  sun.style.transform = `translate(${50 - 45*Math.cos(t*2*Math.PI)}vw,
+${sunh}vh)`;
+  let sky = document.getElementById("sky");
+  let purplysky = (o) => `linear-gradient(to top, hsla(264, 100%, 83%,
+${o}), hsla(240, 100%, 93%, ${o}))`;
+  let bluegreensky = (o) => `linear-gradient(to top, hsla(240, 70%, 70%,
+${o}), hsla(120, 50%, 90%, ${o}))`;
+  let yellowsky = (o) => `linear-gradient(to top, transparent, hsla(60,
+100%, 80%, ${o}) ${sunhp}%, transparent)`;
+  let darksky = (o) => `linear-gradient(to top, hsla(0, 0%, 5%, ${o}),
+hsla(0, 0%, 10%, ${o*0.75}))`;
+  let purplyness = scale(0.9, 0, 0, 0.3, t); //(0.25 - Math.min(0.25,
+//Math.abs(t - 0.25))) / 0.25;
+  let bluegreenness = scale(0.2, 0.5, 0.5, 0.7, t); //(0.25 -
+//Math.min(0.25, Math.abs(t - 0.75))) / 0.25;
+  let darkness = scale(0.4, 0.6, 0.9, 0.1, t); //(Math.max(0.15, 0.25 -
+//Math.min(0.25, Math.abs(((t + 0.5) % 1) - 0.5))) - 0.15) * 10;
+  let base = t >= 0.5 ? `black` : `hsl(300, 20%, 83%)`; //t > 0.25 && t <
+//0.75 ? `black` : `white`;
+  //
+sky.style.background = `${purplysky(purplyness)},
+${bluegreensky(bluegreenness)}, ${yellowsky(0.5)}, ${base}
+${darksky(darkness)}`;
+  //sky.style.background = `${darksky(darkness)}, ${yellowsky(0.5)},
+//${bluegreensky(bluegreenness)}, ${base} ${purplysky(purplyness)}`;
+  requestAnimationFrame(a);
+}
+requestAnimationFrame(a);
+</script>
