@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Chickadees with names!02</title>
+<style>
+button, div {
+  margin: 0 auto 0;
+  text-align: center;
+  display: block;
+}
+button {
+  margin: 1.5em auto;
+}
+</style>
+</head>
+<body>
+  <button id="chickadee">Name a chickadee!</button>
+</body>
+</html>
+<script>
+let cbut = document.getElementById('chickadee');
+let chickadeenames = [
+  'Bob', 'Martha', 'Marley',
+  'Seine', 'Astrono', 'Pomp',
+  'Aesch',
+];
+let ci1 = 0;
+let ci2 = 3;
+let chickadees = Object.create(null);
+function nextname() {
+  ci1 += 1; ci1 %= chickadeenames.length;
+  ci2 += 3; ci2 %= chickadeenames.length;
+  if(ci1 === ci2) {
+    ci1 += 1; ci1 %= chickadeenames.length;
+  }
+  return `${chickadeenames[ci1]} ${chickadeenames[ci2]}`;
+}
+cbut.addEventListener('click', (e) => {
+  let c = document.createElement('div');
+  let name = nextname();
+  while(chickadees[name]) {
+    name += ' Jr';
+  }
+  chickadees[name] = true;
+  c.insertAdjacentText('afterbegin', 'Chickadee '+name);
+  document.body.insertAdjacentElement('beforeend',
+                                     c);
+})
+</script>
